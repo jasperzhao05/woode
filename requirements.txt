@@ -1,0 +1,10 @@
+# Python >=3.11. Direct runtime libraries; no optional export/logging extras.
+ultralytics==8.4.115
+torch==2.12.1
+Pillow==12.3.0
+
+# Pin the backend dependencies to the training environment.
+# These are still installed by Ultralytics; fewer imports is not a smaller backend.
+torchvision==0.27.1
+numpy==2.4.6
+PyYAML==6.0.3

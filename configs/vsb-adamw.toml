@@ -1,0 +1,82 @@
+# Training recipe: two GPUs (DDP), global batch 16.
+# Relative paths are resolved from the project root, independent of your shell directory.
+[paths]
+source = "data/vsb"
+prepared = "splits"
+weights = "weights/yolov8n.pt"
+output = "runs/vsb-adamw-v2"
+
+[train]
+# batch is GLOBAL across GPUs. nbs controls native gradient accumulation.
+epochs = 100
+imgsz = 640
+batch = 16
+device = "0,1"
+workers = 8
+seed = 20250805
+deterministic = true
+amp = true
+optimizer = "AdamW"
+lr0 = 0.000714
+lrf = 0.01
+momentum = 0.9
+weight_decay = 0.0005
+nbs = 64
+cos_lr = false
+patience = 0
+warmup_epochs = 3.0
+warmup_momentum = 0.8
+warmup_bias_lr = 0.0
+box = 7.5
+cls = 0.5
+dfl = 1.5
+single_cls = false
+cls_remap = false
+rect = false
+multi_scale = 0.0
+mosaic = 1.0
+close_mosaic = 10
+hsv_h = 0.015
+hsv_s = 0.7
+hsv_v = 0.4
+degrees = 0.0
+translate = 0.1
+scale = 0.5
+shear = 0.0
+perspective = 0.0
+flipud = 0.0
+fliplr = 0.5
+mixup = 0.0
+cutmix = 0.0
+copy_paste = 0.0
+bgr = 0.0
+cache = false
+fraction = 1.0
+compile = false
+channels_last = false
+val = true
+split = "val"
+conf = 0.001
+iou = 0.7
+max_det = 300
+quantize = 32
+agnostic_nms = false
+augment = false
+plots = true
+save = true
+save_period = -1
+pretrained = true
+# freeze is omitted: pinned backend default is None (no optional layer freezing).
+
+[predict]
+imgsz = 640
+rect = false
+conf = 0.001
+iou = 0.7
+max_det = 300
+agnostic_nms = false
+augment = false
+quantize = 32
+save = false
+verbose = false
+batch = 1
