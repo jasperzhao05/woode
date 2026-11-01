@@ -90,6 +90,20 @@ def calibrate_from(source, output, target=0.999):
     return calibration
 
 
+def declared_onnx_input(path):
+    """Shape of the single float32 input declared by an exported graph."""
+    import onnx
+
+    graph = onnx.load(str(path)).graph
+    inputs = [tensor for tensor in graph.input if tensor.name not in {init.name for init in graph.initializer}]
+    if len(inputs) != 1 or inputs[0].type.tensor_type.elem_type != onnx.TensorProto.FLOAT:
+        raise ValueError('Expected exactly one float32 graph input')
+    shape = tuple(dim.dim_value for dim in inputs[0].type.tensor_type.shape.dim)
+    if len(shape) != 4 or not all(side > 0 for side in shape):
+        raise ValueError(f'Expected a static NCHW graph input, got {shape}')
+    return shape
+
+
 def read_calibration(path, weights, predict):
     calibration = json.loads(Path(path).read_text())
     expected = {'schema': 'image-rejection-calibration-v1', 'source_split': 'val',
@@ -111,6 +125,9 @@ def evaluate(config_path, weights, prepared, output, device, split='val', calibr
     config = load_config(config_path)
     prepared = Path(prepared or config['paths']['prepared']).resolve(strict=True)
     weights = Path(weights).resolve(strict=True)
+    if weights.suffix not in ('.pt', '.onnx'):
+        raise ValueError('Weights must be a .pt checkpoint or an exported .onnx graph')
+    exported = weights.suffix == '.onnx'
     output = Path(output).resolve()
     options = config['predict']
     if not math.isfinite(target) or not 0 < target <= 1:
@@ -118,10 +135,11 @@ def evaluate(config_path, weights, prepared, output, device, split='val', calibr
     if split not in ('val', 'test') or (split == 'test') != (calibration_path is not None):
         raise ValueError('Test requires --calibration from val; val must select its own threshold')
     calibration = read_calibration(calibration_path, weights, options) if calibration_path else None
-    # Fixed FP32 recipe; only input size, letterbox mode and the retained-score floor are configurable.
+    # Fixed decision recipe; only input size, letterbox mode and the retained-score floor are configurable.
+    # Numeric precision comes from the weights file: a PyTorch FP32 checkpoint or an exported ONNX graph.
     required = {'iou': 0.7, 'max_det': 300, 'agnostic_nms': False, 'augment': False, 'quantize': 32, 'batch': 1}
     if any(options.get(key) != value for key, value in required.items()):
-        raise ValueError('Evaluation requires the declared FP32 prediction recipe (iou/max_det/nms/augment/quantize/batch)')
+        raise ValueError('Evaluation requires the declared prediction recipe (iou/max_det/nms/augment/quantize/batch)')
     imgsz, rect, score_floor = options.get('imgsz'), options.get('rect'), options.get('conf')
     if type(imgsz) is not int or imgsz <= 0 or imgsz % 32:
         raise ValueError('predict.imgsz must be a positive multiple of 32')
@@ -130,6 +148,17 @@ def evaluate(config_path, weights, prepared, output, device, split='val', calibr
     if type(score_floor) not in (int, float) or not 0 < score_floor <= 0.001:
         raise ValueError('predict.conf is the retained-score floor and must be in (0, 0.001]')
     recipe_keys = ('imgsz', 'rect', 'conf', *required)
+
+    def shape_ok(shape):
+        # rect=False letterboxes to a square; rect=True pads only to the stride, long side = imgsz.
+        square = shape == (1, 3, imgsz, imgsz)
+        padded = len(shape) == 4 and shape[:2] == (1, 3) and max(shape[2:]) == imgsz and not any(side % 32 for side in shape[2:])
+        return padded if rect else square
+
+    graph_input = declared_onnx_input(weights) if exported else None
+    if exported and (not shape_ok(graph_input) or (not rect) != (graph_input[2] == graph_input[3])):
+        raise ValueError(f'Static ONNX input {graph_input} does not match the letterbox recipe')
+    backend = f'ONNX Runtime, static graph {weights.name}' if exported else 'PyTorch FP32, TF32 off'
     manifest = prepared / f'{split}.csv'
     with manifest.open() as handle:
         rows = list(csv.DictReader(handle))
@@ -165,7 +194,8 @@ def evaluate(config_path, weights, prepared, output, device, split='val', calibr
                'score_definition': 'maximum post-NMS confidence over all original classes; no boxes -> 0',
                'decision': 'score >= threshold', 'requested_predict': options, 'device': device,
                'score_floor': score_floor,
-               'input_recipe': f"long side {imgsz}, {'stride-padded letterbox (rect)' if rect else 'square letterbox'}, FP32, TF32 off",
+               'input_recipe': f"long side {imgsz}, {'stride-padded letterbox (rect)' if rect else 'square letterbox'}, {backend}",
+               'weights_format': 'onnx' if exported else 'pt',
                'fixed_thresholds': [0.05, 0.10, 0.25, 0.50, 0.75],
                'diagnostic_recall_targets': [0.90, 0.95, 0.99, target] if split == 'val' else [],
                'threshold_scope': 'validation selection; not independent performance' if split == 'val' else 'frozen validation threshold; no test retuning',
@@ -177,7 +207,8 @@ def evaluate(config_path, weights, prepared, output, device, split='val', calibr
                           (weights, config_path, manifest, *((Path(calibration_path),) if calibration_path else ()), *(ROOT / name for name in
                            ('evaluate.py', 'model.py', 'config.py', 'data.py')))},
                'annotation_sha256': label_hash.hexdigest(), 'image_content_rehashed': False,
-               'versions': {name: version(name) for name in ('ultralytics', 'torch', 'torchvision', 'numpy', 'Pillow')}}
+               'versions': {name: version(name) for name in ('ultralytics', 'torch', 'torchvision', 'numpy', 'Pillow',
+                                                             *(('onnx', 'onnxruntime') if exported else ()))}}
     record = output / 'metrics.json'
     record.write_text(json.dumps(receipt, indent=2) + '\n')
     (output / 'prediction-config.toml').write_bytes(config_path.read_bytes())
@@ -187,10 +218,7 @@ def evaluate(config_path, weights, prepared, output, device, split='val', calibr
     def check_input(module, inputs):
         tensor = inputs[0]
         shape = tuple(tensor.shape)
-        # rect=False letterboxes to a square; rect=True pads only to the stride, long side = imgsz.
-        square = shape == (1, 3, imgsz, imgsz)
-        padded = len(shape) == 4 and shape[:2] == (1, 3) and max(shape[2:]) == imgsz and not any(side % 32 for side in shape[2:])
-        if not (padded if rect else square) or str(tensor.dtype) != 'torch.float32':
+        if not shape_ok(shape) or str(tensor.dtype) != 'torch.float32':
             raise RuntimeError(f'Unexpected model input: {shape}, {tensor.dtype}')
         observed.add((shape, str(tensor.dtype), str(tensor.device)))
 
@@ -201,7 +229,12 @@ def evaluate(config_path, weights, prepared, output, device, split='val', calibr
         model = build_model(weights)
         if [model.names[i] for i in range(10)] != CLASS_NAMES:
             raise ValueError('Checkpoint class mapping differs from labels')
-        hook = model.model.register_forward_pre_hook(check_input)
+        if exported:
+            # A static graph rejects any other input shape at run time; record the declared one.
+            hook = None
+            observed.add((graph_input, 'float32 (static ONNX graph input)', 'onnxruntime'))
+        else:
+            hook = model.model.register_forward_pre_hook(check_input)
         scores = []
         with (output / 'scores.csv').open('x', newline='') as handle:
             writer = None
@@ -229,14 +262,16 @@ def evaluate(config_path, weights, prepared, output, device, split='val', calibr
                                  'cuda_matmul_allow_tf32': torch.backends.cuda.matmul.allow_tf32,
                                  'cudnn_allow_tf32': torch.backends.cudnn.allow_tf32,
                                  'args': {key: getattr(predictor.args, key) for key in recipe_keys}}
-                    if effective['fp16'] or effective['imgsz'] != [imgsz, imgsz] or not observed:
+                    expected_imgsz = list(graph_input[2:]) if exported else [imgsz, imgsz]
+                    if effective['fp16'] or effective['imgsz'] != expected_imgsz or not observed:
                         raise RuntimeError(f'Unexpected effective prediction settings: {effective}')
                     receipt['effective_predict'] = effective
                     record.write_text(json.dumps(receipt, indent=2) + '\n')
                 if index % 250 == 0 or index == len(rows):
                     handle.flush()
                     print(f'{weights.parent.parent.name}: {index}/{len(rows)} images', flush=True)
-        hook.remove()
+        if hook is not None:
+            hook.remove()
         targets = []
         if split == 'val':
             thresholds = sorted({1.000001, options['conf'], *(row['score'] for row in scores if row['score'] > 0)}, reverse=True)

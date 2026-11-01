@@ -17,10 +17,10 @@ os.environ["YOLO_AUTOINSTALL"] = "false"
 
 
 def build_model(weights):
-    """Load a local detection checkpoint; missing weights are an error, not a download."""
+    """Load a local .pt checkpoint or exported .onnx graph; missing weights are an error, not a download."""
     weights = Path(weights).expanduser().resolve(strict=True)
-    if weights.suffix != ".pt":
-        raise ValueError("Expected a local .pt detection checkpoint")
+    if weights.suffix not in (".pt", ".onnx"):
+        raise ValueError("Expected a local .pt detection checkpoint or an exported .onnx graph")
     from ultralytics import YOLO, settings
 
     settings.update({key: False for key in ("sync", "clearml", "comet", "dvc",
@@ -41,6 +41,10 @@ def predict_image(model, image, device="cpu", config_path=DEFAULT_CONFIG):
     else:
         image = image.convert("RGB")
     options = load_config(config_path)["predict"]
+    backend = model.predictor.model if model.predictor is not None else None
+    if backend is not None and backend.format != "pt" and not backend.dynamic:
+        # An exported static graph fixes its input; the per-call imgsz must restate it instead of the recipe's long side.
+        options["imgsz"] = list(backend.imgsz)
     result = model.predict(source=image, device=device, **options)[0]
     boxes = result.boxes.data.cpu().tolist()
     # Maximum post-NMS confidence over all classes, not a calibrated probability.

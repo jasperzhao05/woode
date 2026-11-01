@@ -1,0 +1,108 @@
+# ONNX export and quantization of the MuSGD best.pt at the rect letterbox geometry.
+# [train] is a copy of the training recipe and is not executed here.
+# Relative paths are resolved from the project root, independent of your shell directory.
+[paths]
+source = "data/vsb"
+prepared = "splits"
+weights = "weights/yolov8n.pt"
+output = "runs/vsb-musgd-v2"
+
+[train]
+# batch is GLOBAL across GPUs. nbs controls native gradient accumulation.
+epochs = 100
+imgsz = 640
+batch = 16
+device = "0,1"
+workers = 8
+seed = 20250805
+deterministic = true
+amp = true
+optimizer = "MuSGD"
+lr0 = 0.01
+lrf = 0.01
+momentum = 0.9
+weight_decay = 0.0005
+nbs = 64
+cos_lr = false
+patience = 0
+warmup_epochs = 3.0
+warmup_momentum = 0.8
+warmup_bias_lr = 0.0
+box = 7.5
+cls = 0.5
+dfl = 1.5
+single_cls = false
+cls_remap = false
+rect = false
+multi_scale = 0.0
+mosaic = 1.0
+close_mosaic = 10
+hsv_h = 0.015
+hsv_s = 0.7
+hsv_v = 0.4
+degrees = 0.0
+translate = 0.1
+scale = 0.5
+shear = 0.0
+perspective = 0.0
+flipud = 0.0
+fliplr = 0.5
+mixup = 0.0
+cutmix = 0.0
+copy_paste = 0.0
+bgr = 0.0
+cache = false
+fraction = 1.0
+compile = false
+channels_last = false
+val = true
+split = "val"
+conf = 0.001
+iou = 0.7
+max_det = 300
+quantize = 32
+agnostic_nms = false
+augment = false
+plots = true
+save = true
+save_period = -1
+pretrained = true
+# freeze is omitted: pinned backend default is None (no optional layer freezing).
+
+[predict]
+imgsz = 640
+rect = true
+conf = 0.001
+iou = 0.7
+max_det = 300
+agnostic_nms = false
+augment = false
+quantize = 32
+save = false
+verbose = false
+batch = 1
+
+[quantize]
+# Static graph input (height, width): a 2800x1024 board letterboxed to long side 640 and padded to stride 32.
+input_shape = [256, 640]
+opset = 20
+variants = ["fp16", "int8-dynamic", "int8-minmax", "int8-percentile"]
+# Calibration draws a fixed-seed sample of training images; validation never calibrates the quantizer.
+calibration_images = 300
+calibration_seed = 20250805
+# uint8 activations with int8 weights is the ONNX Runtime CPU pairing; reduce_range keeps weights to 7 bits
+# so u8*s8 accumulation cannot saturate on x86-64 CPUs without VNNI (the Xeon Silver 4110 used for timing).
+activation_type = "uint8"
+weight_type = "int8"
+per_channel = true
+reduce_range = true
+# Sensitivity: one weighted node INT8 at a time, scored on training images disjoint from calibration;
+# the mixed variant keeps the most sensitive nodes in FP32 and quantizes the rest with the named calibrator.
+sensitivity_images = 200
+sensitivity_seed = 20250806
+mixed_keep_fp32 = 8
+mixed_method = "percentile"
+# Latency: model forward only, CPU execution provider, batch 1; 0 threads = all logical cores.
+warmup = 20
+runs = 200
+threads = [1, 4, 0]
