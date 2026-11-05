@@ -1,0 +1,241 @@
+{
+  "status": "completed",
+  "started_at_utc": "2026-10-30T00:01:11.612075+00:00",
+  "unit": "one dataset image, not a verified physical product",
+  "split": "val",
+  "positive_definition": "any of the original ten annotated defect classes",
+  "score_definition": "maximum post-NMS confidence over all original classes; no boxes -> 0",
+  "decision": "score >= threshold",
+  "requested_predict": {
+    "imgsz": 640,
+    "rect": false,
+    "conf": 0.001,
+    "iou": 0.7,
+    "max_det": 300,
+    "agnostic_nms": false,
+    "augment": false,
+    "quantize": 32,
+    "save": false,
+    "verbose": false,
+    "batch": 1
+  },
+  "device": "0",
+  "fixed_thresholds": [
+    0.05,
+    0.1,
+    0.25,
+    0.5,
+    0.75
+  ],
+  "diagnostic_recall_targets": [
+    0.9,
+    0.95,
+    0.99,
+    0.999
+  ],
+  "threshold_scope": "validation selection; not independent performance",
+  "calibration": null,
+  "checkpoint_selection": "historical best selected by native validation mAP50-95",
+  "counts": {
+    "images": 3042,
+    "positive": 2718,
+    "candidate_normal": 324
+  },
+  "classes": {
+    "Live_Knot": {
+      "images": 1840,
+      "boxes": 3328
+    },
+    "Dead_Knot": {
+      "images": 1253,
+      "boxes": 1800
+    },
+    "Knot_missing": {
+      "images": 77,
+      "boxes": 77
+    },
+    "knot_with_crack": {
+      "images": 245,
+      "boxes": 298
+    },
+    "Crack": {
+      "images": 224,
+      "boxes": 304
+    },
+    "Quartzity": {
+      "images": 142,
+      "boxes": 176
+    },
+    "resin": {
+      "images": 345,
+      "boxes": 434
+    },
+    "Marrow": {
+      "images": 132,
+      "boxes": 142
+    },
+    "Blue_Stain": {
+      "images": 10,
+      "boxes": 13
+    },
+    "overgrown": {
+      "images": 1,
+      "boxes": 1
+    }
+  },
+  "sha256": {
+    "runs/ft20-20261029T230105Z/training/hard-normal/weights/epoch19.pt": "885ad5fe365f8d862767a181d6bcccab07cbb30803bbeea9792922588128db5f",
+    "runs/ft20-20261029T230105Z/source/configs/vsb-ft-hard-normal.toml": "c6d924acd99e331efb67c0bcccfd54f30694820594bb741a8ded7e95d1402e48",
+    "splits/val.csv": "5dea269765f69002adb6306862ad08876426f0aef074da78b0c1580044b20ed8",
+    "runs/ft20-20261029T230105Z/source/evaluate.py": "f1f1b8bfd536b70d5f71e69c802205a86fad32bde0b22ef158a42f3ef3f1b509",
+    "runs/ft20-20261029T230105Z/source/model.py": "aab40adb442d627328779ec17f9efc9307b4816aa507949cf176fddbd178a993",
+    "runs/ft20-20261029T230105Z/source/config.py": "20554c7235891d515a97addfd8e9ad10a723c7cb776096543d54dbf5d67dba86",
+    "runs/ft20-20261029T230105Z/source/data.py": "de4952a70ed35e09665ece0f6e4b8ca830e5fce1c6b5fd7d50b6d02c3c697bc0"
+  },
+  "annotation_sha256": "44d06bc995537ea3867cbe18f8aa94df8dcc575ed7b506b1d7ff385b46453a6e",
+  "image_content_rehashed": false,
+  "versions": {
+    "ultralytics": "8.4.115",
+    "torch": "2.12.1",
+    "torchvision": "0.27.1",
+    "numpy": "2.4.6",
+    "Pillow": "12.3.0"
+  },
+  "effective_predict": {
+    "imgsz": [
+      640,
+      640
+    ],
+    "fp16": false,
+    "device": "cuda:0",
+    "cuda_matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "args": {
+      "imgsz": 640,
+      "rect": false,
+      "conf": 0.001,
+      "iou": 0.7,
+      "max_det": 300,
+      "agnostic_nms": false,
+      "augment": false,
+      "quantize": null,
+      "batch": 1
+    }
+  },
+  "finished_at_utc": "2026-10-30T00:05:50.998734+00:00",
+  "elapsed_seconds": 279.30087696993724,
+  "observed_inputs": [
+    {
+      "shape": [
+        1,
+        3,
+        640,
+        640
+      ],
+      "dtype": "torch.float32",
+      "device": "cuda:0"
+    }
+  ],
+  "fixed_threshold_results": [
+    {
+      "threshold": 0.05,
+      "TP": 2711,
+      "FP": 79,
+      "TN": 245,
+      "FN": 7,
+      "precision": 0.9716845878136201,
+      "recall": 0.9974245768947756,
+      "false_positive_rate": 0.24382716049382716
+    },
+    {
+      "threshold": 0.1,
+      "TP": 2705,
+      "FP": 53,
+      "TN": 271,
+      "FN": 13,
+      "precision": 0.9807831762146483,
+      "recall": 0.9952170713760118,
+      "false_positive_rate": 0.16358024691358025
+    },
+    {
+      "threshold": 0.25,
+      "TP": 2684,
+      "FP": 22,
+      "TN": 302,
+      "FN": 34,
+      "precision": 0.991869918699187,
+      "recall": 0.9874908020603385,
+      "false_positive_rate": 0.06790123456790123
+    },
+    {
+      "threshold": 0.5,
+      "TP": 2503,
+      "FP": 9,
+      "TN": 315,
+      "FN": 215,
+      "precision": 0.9964171974522293,
+      "recall": 0.920897718910964,
+      "false_positive_rate": 0.027777777777777776
+    },
+    {
+      "threshold": 0.75,
+      "TP": 1036,
+      "FP": 1,
+      "TN": 323,
+      "FN": 1682,
+      "precision": 0.9990356798457087,
+      "recall": 0.3811626195732156,
+      "false_positive_rate": 0.0030864197530864196
+    }
+  ],
+  "validation_selected_operating_points": [
+    {
+      "target_recall": 0.9,
+      "attainable_above_score_floor": true,
+      "selected": {
+        "threshold": 0.5327218770980835,
+        "TP": 2447,
+        "FP": 7,
+        "TN": 317,
+        "FN": 271,
+        "precision": 0.9971475142624286,
+        "recall": 0.9002943340691685,
+        "false_positive_rate": 0.021604938271604937
+      }
+    },
+    {
+      "target_recall": 0.95,
+      "attainable_above_score_floor": true,
+      "selected": {
+        "threshold": 0.44666993618011475,
+        "TP": 2583,
+        "FP": 9,
+        "TN": 315,
+        "FN": 135,
+        "precision": 0.9965277777777778,
+        "recall": 0.9503311258278145,
+        "false_positive_rate": 0.027777777777777776
+      }
+    },
+    {
+      "target_recall": 0.99,
+      "attainable_above_score_floor": true,
+      "selected": {
+        "threshold": 0.21473726630210876,
+        "TP": 2691,
+        "FP": 26,
+        "TN": 298,
+        "FN": 27,
+        "precision": 0.9904306220095693,
+        "recall": 0.9900662251655629,
+        "false_positive_rate": 0.08024691358024691
+      }
+    },
+    {
+      "target_recall": 0.999,
+      "attainable_above_score_floor": false,
+      "selected": null
+    }
+  ],
+  "calibration_error": "Target is unattainable above retained prediction floor; do not claim zero-score detections"
+}

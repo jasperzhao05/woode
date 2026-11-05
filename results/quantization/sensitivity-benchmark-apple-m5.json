@@ -1,0 +1,50 @@
+{
+  "hostname": "apple-m5",
+  "cpu": "Apple M5",
+  "machine": "arm64",
+  "system": "macOS-26.5.2-arm64-arm-64bit",
+  "logical_cores": 10,
+  "onnxruntime": "1.23.2",
+  "providers_available": [
+    "CoreMLExecutionProvider",
+    "AzureExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "measured_at_utc": "2026-11-01T13:46:12.717467+00:00",
+  "input": "benchmark-input.npy",
+  "scope": "model forward only; excludes image decoding, letterbox and NMS",
+  "results": {
+    "int8-mixed": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 15.65416669473052,
+        "mean_ms": 15.70361215621233,
+        "p90_ms": 15.73033258318901,
+        "min_ms": 15.444915741682053,
+        "images_per_second": 63.88075580775681
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 6.468124687671661,
+        "mean_ms": 6.47943542804569,
+        "p90_ms": 6.527207791805267,
+        "min_ms": 6.434457376599312,
+        "images_per_second": 154.6043170605561
+      },
+      {
+        "threads": 10,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 9.586187545210123,
+        "mean_ms": 9.758926066569984,
+        "p90_ms": 12.47975043952465,
+        "min_ms": 5.956125445663929,
+        "images_per_second": 104.31675734319056
+      }
+    ]
+  }
+}

@@ -12,3 +12,6 @@ PyYAML==6.0.3
 # ONNX export, static/dynamic INT8 quantization and CPU inference of exported graphs (quantize.py).
 onnx==1.19.1
 onnxruntime==1.23.2
+
+# Figure rendering (figures.py).
+matplotlib==3.11.1

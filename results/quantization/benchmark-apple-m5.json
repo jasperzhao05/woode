@@ -1,0 +1,185 @@
+{
+  "hostname": "apple-m5",
+  "cpu": "Apple M5",
+  "machine": "arm64",
+  "system": "macOS-26.5.2-arm64-arm-64bit",
+  "logical_cores": 10,
+  "onnxruntime": "1.23.2",
+  "providers_available": [
+    "CoreMLExecutionProvider",
+    "AzureExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "measured_at_utc": "2026-10-31T23:36:23.204669+00:00",
+  "input": "benchmark-input.npy",
+  "scope": "model forward only; excludes image decoding, letterbox and NMS",
+  "results": {
+    "fp32": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 34.90535356104374,
+        "mean_ms": 35.04985142033547,
+        "p90_ms": 35.063374787569046,
+        "min_ms": 34.67837534844875,
+        "images_per_second": 28.648900468839656
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 11.832395568490028,
+        "mean_ms": 12.661631722003222,
+        "p90_ms": 14.29787464439869,
+        "min_ms": 11.47099956870079,
+        "images_per_second": 84.51373977582574
+      },
+      {
+        "threads": 10,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 19.75079160183668,
+        "mean_ms": 20.28878259472549,
+        "p90_ms": 25.927333161234856,
+        "min_ms": 12.500874698162079,
+        "images_per_second": 50.6308820506722
+      }
+    ],
+    "fp16": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 35.65462538972497,
+        "mean_ms": 35.91826936695725,
+        "p90_ms": 36.265917122364044,
+        "min_ms": 35.43158434331417,
+        "images_per_second": 28.04685196014378
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 12.760916259139776,
+        "mean_ms": 13.025546516291797,
+        "p90_ms": 13.039125129580498,
+        "min_ms": 12.002499774098396,
+        "images_per_second": 78.36427884116613
+      },
+      {
+        "threads": 10,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 21.56862523406744,
+        "mean_ms": 22.13535150513053,
+        "p90_ms": 28.583667241036892,
+        "min_ms": 12.878208421170712,
+        "images_per_second": 46.36364112908362
+      }
+    ],
+    "int8-dynamic": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 15.584645792841911,
+        "mean_ms": 15.758180157281458,
+        "p90_ms": 16.383458860218525,
+        "min_ms": 15.440000221133232,
+        "images_per_second": 64.16571882944584
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 8.734125178307295,
+        "mean_ms": 9.807621040381491,
+        "p90_ms": 12.973333708941936,
+        "min_ms": 8.074291981756687,
+        "images_per_second": 114.49343575744396
+      },
+      {
+        "threads": 10,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 16.03454165160656,
+        "mean_ms": 16.994921839796007,
+        "p90_ms": 22.70808257162571,
+        "min_ms": 9.67183243483305,
+        "images_per_second": 62.365362336366275
+      }
+    ],
+    "int8-minmax": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 13.392854481935501,
+        "mean_ms": 13.69481110945344,
+        "p90_ms": 14.662791974842548,
+        "min_ms": 13.028583489358425,
+        "images_per_second": 74.66668150160342
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 6.315978709608316,
+        "mean_ms": 6.350117651745677,
+        "p90_ms": 6.677332334220409,
+        "min_ms": 6.001416593790054,
+        "images_per_second": 158.3285894359854
+      },
+      {
+        "threads": 10,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 11.09068701043725,
+        "mean_ms": 11.368329590186477,
+        "p90_ms": 15.837167389690876,
+        "min_ms": 5.802374333143234,
+        "images_per_second": 90.16573987336561
+      }
+    ],
+    "int8-percentile": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 13.613416347652674,
+        "mean_ms": 13.936317949555814,
+        "p90_ms": 14.831542037427425,
+        "min_ms": 13.024208135902882,
+        "images_per_second": 73.4569467694586
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 6.487562786787748,
+        "mean_ms": 6.623353627510369,
+        "p90_ms": 7.227917201817036,
+        "min_ms": 6.033333018422127,
+        "images_per_second": 154.14109009265403
+      },
+      {
+        "threads": 10,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 10.28370764106512,
+        "mean_ms": 10.681204786524177,
+        "p90_ms": 14.270334504544735,
+        "min_ms": 5.6936657056212425,
+        "images_per_second": 97.24119305052768
+      }
+    ]
+  },
+  "variants_sha256": {
+    "fp32": "364fdc207d818d1ddf3143f2c7fd1ca78ec2c08ddb94be91513bec9f64416cb8",
+    "fp16": "30a2d965a98b961d2b261e7d312b129a95767c053deb8f515c2e30244ea3489d",
+    "int8-dynamic": "5e426f9eded031dcf3012838ffd93d269d05f935e4e11b4e07dfdf2146bc871b",
+    "int8-minmax": "6149d7c63607fa3c5ae0d9e2a275bf9bd96af159f633dab15d69f2e12d13d76c",
+    "int8-percentile": "bc9d4c4c9377baadf9a53403265b2e8e0620ac79531e204cb82f41093d4aadc2"
+  }
+}
