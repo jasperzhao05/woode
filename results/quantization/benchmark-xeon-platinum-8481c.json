@@ -1,0 +1,296 @@
+{
+  "hostname": "xeon-platinum-8481c",
+  "cpu": "Intel(R) Xeon(R) Platinum 8481C",
+  "machine": "x86_64",
+  "system": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "logical_cores": 224,
+  "onnxruntime": "1.23.2",
+  "providers_available": [
+    "AzureExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "measured_at_utc": "2026-11-05T08:14:10.959334+00:00",
+  "input": "benchmark-input.npy",
+  "scope": "model forward only; excludes image decoding, letterbox and NMS",
+  "loadavg": [
+    "52.06",
+    "39.33",
+    "27.86"
+  ],
+  "variants_sha256": {
+    "fp32": "364fdc207d818d1ddf3143f2c7fd1ca78ec2c08ddb94be91513bec9f64416cb8",
+    "fp16": "30a2d965a98b961d2b261e7d312b129a95767c053deb8f515c2e30244ea3489d",
+    "int8-dynamic": "5e426f9eded031dcf3012838ffd93d269d05f935e4e11b4e07dfdf2146bc871b",
+    "int8-minmax": "6149d7c63607fa3c5ae0d9e2a275bf9bd96af159f633dab15d69f2e12d13d76c",
+    "int8-percentile": "bc9d4c4c9377baadf9a53403265b2e8e0620ac79531e204cb82f41093d4aadc2",
+    "int8-mixed": "0dfc285af92626fee46add3adea3beed4a1d8f4cf791cc8348183f283fe166eb"
+  },
+  "results": {
+    "fp32": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 40.33229546621442,
+        "mean_ms": 40.45407724159304,
+        "p90_ms": 41.09649593010545,
+        "min_ms": 38.783053983934224,
+        "images_per_second": 24.79402643565578
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 20.841739024035633,
+        "mean_ms": 21.13851629954297,
+        "p90_ms": 22.82411407213658,
+        "min_ms": 16.211205045692623,
+        "images_per_second": 47.98064109941857
+      }
+    ],
+    "fp16": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 37.783351028338075,
+        "mean_ms": 38.068122756667435,
+        "p90_ms": 39.039121940732,
+        "min_ms": 36.555825965479016,
+        "images_per_second": 26.466683679009442
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 15.23072854615748,
+        "mean_ms": 15.506249499158002,
+        "p90_ms": 16.479841899126768,
+        "min_ms": 14.748187037184834,
+        "images_per_second": 65.6567410396325
+      }
+    ],
+    "int8-dynamic": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 25.017612031660974,
+        "mean_ms": 25.07934855239,
+        "p90_ms": 25.4400729900226,
+        "min_ms": 24.22931999899447,
+        "images_per_second": 39.971840587121285
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 27.111084025818855,
+        "mean_ms": 26.449086864013225,
+        "p90_ms": 27.57694001775235,
+        "min_ms": 17.74804398883134,
+        "images_per_second": 36.88528275179496
+      }
+    ],
+    "int8-minmax": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 18.510360503569245,
+        "mean_ms": 18.54861684842035,
+        "p90_ms": 18.872217973694205,
+        "min_ms": 18.101637018844485,
+        "images_per_second": 54.023799255945114
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 17.03298999927938,
+        "mean_ms": 16.759838674333878,
+        "p90_ms": 17.985297017730772,
+        "min_ms": 13.16507300361991,
+        "images_per_second": 58.70959825857394
+      }
+    ],
+    "int8-percentile": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 19.18289589229971,
+        "mean_ms": 20.70927846361883,
+        "p90_ms": 21.238590008579195,
+        "min_ms": 18.302125041373074,
+        "images_per_second": 52.12977256480938
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 17.60739751625806,
+        "mean_ms": 19.29809090681374,
+        "p90_ms": 24.59031098987907,
+        "min_ms": 16.127481940202415,
+        "images_per_second": 56.79431040712488
+      }
+    ],
+    "int8-mixed": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 22.141072957310826,
+        "mean_ms": 22.115770091186278,
+        "p90_ms": 22.475434932857752,
+        "min_ms": 21.007912000641227,
+        "images_per_second": 45.16492953742818
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 13.044957537204027,
+        "mean_ms": 13.178713883971795,
+        "p90_ms": 13.435264001600444,
+        "min_ms": 12.59583793580532,
+        "images_per_second": 76.65797279508305
+      }
+    ]
+  },
+  "second_pass": {
+    "fp32": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 38.86193101061508,
+        "mean_ms": 40.35576386842877,
+        "p90_ms": 43.26595598831773,
+        "min_ms": 37.83420205581933,
+        "images_per_second": 25.732123288645937
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 20.73913998901844,
+        "mean_ms": 21.27138377225492,
+        "p90_ms": 22.985043935477734,
+        "min_ms": 18.41369504109025,
+        "images_per_second": 48.21800713672356
+      }
+    ],
+    "fp16": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 37.757504964247346,
+        "mean_ms": 37.966575865866616,
+        "p90_ms": 38.57558500021696,
+        "min_ms": 36.54198197182268,
+        "images_per_second": 26.48480086136258
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 19.136313465423882,
+        "mean_ms": 19.18020097189583,
+        "p90_ms": 19.386654952540994,
+        "min_ms": 18.64986401051283,
+        "images_per_second": 52.25666907091759
+      }
+    ],
+    "int8-dynamic": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 25.361591950058937,
+        "mean_ms": 25.355396937811747,
+        "p90_ms": 25.802507996559143,
+        "min_ms": 24.40976002253592,
+        "images_per_second": 39.42970149386368
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 19.148441962897778,
+        "mean_ms": 19.193708550883457,
+        "p90_ms": 19.473487976938486,
+        "min_ms": 18.641272094100714,
+        "images_per_second": 52.22357003967271
+      }
+    ],
+    "int8-minmax": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 18.698901520110667,
+        "mean_ms": 18.734521043370478,
+        "p90_ms": 19.09326098393649,
+        "min_ms": 18.193932017311454,
+        "images_per_second": 53.47907730967512
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 10.937313956674188,
+        "mean_ms": 11.031531855696812,
+        "p90_ms": 11.426767916418612,
+        "min_ms": 10.693984106183052,
+        "images_per_second": 91.43012662535651
+      }
+    ],
+    "int8-percentile": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 18.887908023316413,
+        "mean_ms": 19.28470732003916,
+        "p90_ms": 20.103320013731718,
+        "min_ms": 18.17756099626422,
+        "images_per_second": 52.94392575215517
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 15.287902555428445,
+        "mean_ms": 14.22548474278301,
+        "p90_ms": 15.974284033291042,
+        "min_ms": 10.618582018651068,
+        "images_per_second": 65.41119662258174
+      }
+    ],
+    "int8-mixed": [
+      {
+        "threads": 1,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 22.357880021445453,
+        "mean_ms": 22.377831988269463,
+        "p90_ms": 22.788095055148005,
+        "min_ms": 21.24899299815297,
+        "images_per_second": 44.72695975829596
+      },
+      {
+        "threads": 4,
+        "warmup": 20,
+        "runs": 200,
+        "median_ms": 13.42138450127095,
+        "mean_ms": 14.208271835232154,
+        "p90_ms": 15.890528913587332,
+        "min_ms": 12.809533975087106,
+        "images_per_second": 74.50796152254665
+      }
+    ]
+  }
+}
