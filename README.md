@@ -29,6 +29,7 @@ surface defect dataset [1].
 - [7. Reproduce](#7-reproduce)
 - [8. Repository](#8-repository)
 - [References](#references)
+- [License](#license)
 
 ## 1. Problem and setup
 
@@ -224,3 +225,8 @@ figures/           the three figures
 5. B. Jacob et al. Quantization and training of neural networks for efficient integer-arithmetic-only
    inference. *CVPR*, 2018.
 6. ONNX Runtime developers. ONNX Runtime, 2021. https://onnxruntime.ai
+
+## License
+
+Code is released under the [MIT License](LICENSE). Figure 2 reproduces images from the VSB dataset
+(CC BY 4.0), and the Ultralytics backend is licensed separately under AGPL-3.0.
