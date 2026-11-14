@@ -129,7 +129,7 @@ QDQ, uint8 activations and int8 per-channel weights, calibrated on 300 training 
 | int8-dynamic | weights offline, activations per run | 3.25 MB | 15.6 ms | 8.7 ms | 25.0 ms | 72.4 ms |
 | int8-minmax | static, MinMax calibration | 3.35 MB | 13.4 ms | 6.3 ms | 18.5 ms | 56.6 ms |
 | int8-percentile | static, 99.999th percentile | 3.35 MB | 13.6 ms | 6.5 ms | 19.2 ms | 56.6 ms |
-| int8-mixed | percentile, 8 sensitive layers in FP32 | 3.58 MB | 15.7 ms | 6.5 ms | 22.1 ms | TBD |
+| int8-mixed | percentile, 8 sensitive layers in FP32 | 3.58 MB | 15.7 ms | 6.5 ms | 22.1 ms | ≈ 57 ms |
 
 Latency is the model forward pass in ONNX Runtime 1.23.2 on the CPU, batch 1, median of 200 runs. FP16 halves
 the file and nothing else. The INT8 speed-up is set by the instruction set: 2.6× on the M5 with `SDOT/UDOT`,
